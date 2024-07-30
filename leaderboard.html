@@ -57,20 +57,37 @@ footer, header, hgroup, menu, nav, section {
 	display: block;
 }
 
+table {
+      width: 50%;
+      border-collapse: collapse;
+      margin: 25px 0;
+      font-size: 18px;
+      text-align: left;
+    }
+    th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+
 </style>
 
 </head>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Leaderboard</title>
-</head>
 <body>
   <h1>Leaderboard</h1>
-  <div id="leaderboard"></div>
+  <table id="leaderboardTable">
+    <thead>
+      <tr>
+        <th>Email</th>
+        <th>Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Rows will be added here by JavaScript -->
+    </tbody>
+  </table>
 
   <script>
     fetch('https://script.google.com/macros/s/AKfycbzSFYyY6MD10vxK_jtYSNKwDAgBWYjGOoha8gpwZZBdAE48yGja4s0T87Ad39z6ULBL/exec')
