@@ -1,105 +1,27 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Premier League score guessing</title>
-
-  <link rel="shortcut icon" type="image/png" href="https://raw.githubusercontent.com/louriach/lineswritten/master/favicon.jpg"/>
-
-  <meta name="description" content="">
-  <meta name="author" content="Luis Ouriach">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <meta property="og:title" content="" />
-    <meta property="og:description" content="">
-    <meta property="og:image" content="">
-    <meta property="og:url" content="">
-    <meta name="twitter:card" content="summary_large_image">
-    
-    <meta property="og:site_name" content="">
-    <meta name="twitter:image:alt" content="">
-    
-    <meta name="twitter:site" content="@disco_lu">
-
-    <!-- iOS top bar color settings -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
-<style>
-    /* http://meyerweb.com/eric/tools/css/reset/ 
-   v2.0 | 20110126
-   License: none (public domain)
-*/
-
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed, 
-figure, figcaption, footer, header, hgroup, 
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	font-size: 100%;
-	font: inherit;
-	vertical-align: baseline;
-}
-/* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure, 
-footer, header, hgroup, menu, nav, section {
-	display: block;
-}
-
-</style>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Submit Your Predictions</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script defer src="js/main.js"></script>
 </head>
-
-<h1>Predict the Results</h1>
-  <form id="predictionForm">
-    <!-- Add input fields for each fixture -->
-    <label for="fixture1">Team A vs Team B:</label>
-    <input type="text" id="fixture1" name="fixture1"><br><br>
-    <label for="fixture2">Team C vs Team D:</label>
-    <input type="text" id="fixture2" name="fixture2"><br><br>
-    <button type="submit">Save Predictions</button>
-  </form>
-
-  <script>
-    document.getElementById('predictionForm').addEventListener('submit', function(event) {
-      event.preventDefault();
-      var email = new URLSearchParams(window.location.search).get('email');
-      var fixture1 = document.getElementById('fixture1').value;
-      var fixture2 = document.getElementById('fixture2').value;
-
-      // Send predictions to Google Sheets or Firebase
-      fetch('https://script.google.com/macros/s/AKfycbzSFYyY6MD10vxK_jtYSNKwDAgBWYjGOoha8gpwZZBdAE48yGja4s0T87Ad39z6ULBL/exec', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          email: email,
-          predictions: {
-            fixture1: fixture1,
-            fixture2: fixture2
-          }
-        })
-      }).then(response => {
-        if (response.ok) {
-          alert('Predictions saved!');
-        } else {
-          alert('Error saving predictions.');
-        }
-      });
-    });
-  </script>
-
+<body class="bg-gray-100 text-gray-900">
+  <header class="bg-blue-800 text-white p-4">
+    <h1 class="text-2xl font-bold">Submit Your Predictions</h1>
+  </header>
+  <main class="p-4">
+    <div id="userInfo" class="mb-4"></div>
+    <form id="predictionForm" class="space-y-4">
+      <div id="fixturesContainer">
+        <!-- Fixtures will be loaded here -->
+      </div>
+      <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded">Save Predictions</button>
+    </form>
+  </main>
+  <footer class="bg-gray-800 text-white p-4 text-center">
+    <p>&copy; 2024 Premier League Score Guessing</p>
+  </footer>
 </body>
 </html>
