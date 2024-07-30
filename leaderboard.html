@@ -91,14 +91,19 @@ table {
 
   <script>
     fetch('https://script.google.com/macros/s/AKfycbzSFYyY6MD10vxK_jtYSNKwDAgBWYjGOoha8gpwZZBdAE48yGja4s0T87Ad39z6ULBL/exec')
-      .then(response => response.json())
+    .then(response => response.json())
       .then(data => {
-        var leaderboardDiv = document.getElementById('leaderboard');
+        var leaderboardTable = document.getElementById('leaderboardTable').getElementsByTagName('tbody')[0];
         data.forEach(player => {
-          var playerDiv = document.createElement('div');
-          playerDiv.textContent = player.name + ': ' + player.points + ' points';
-          leaderboardDiv.appendChild(playerDiv);
+          var row = leaderboardTable.insertRow();
+          var emailCell = row.insertCell(0);
+          var scoreCell = row.insertCell(1);
+          emailCell.textContent = player.email;
+          scoreCell.textContent = player.score;
         });
+      })
+      .catch(error => {
+        console.error('Error fetching leaderboard data:', error);
       });
   </script>
 </body>
