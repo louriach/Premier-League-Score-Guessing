@@ -1,22 +1,27 @@
 document.addEventListener("DOMContentLoaded", function() {
   const email = new URLSearchParams(window.location.search).get('email');
-  
+
   if (!email) {
     console.error("Error: No email provided in URL");
     alert("Error: No email provided. Please make sure you accessed this page via the correct link in the email.");
     return;
   }
-  
+
   console.log("Email captured:", email);
 
   // Fetch the fixtures from the Google Apps Script
-  fetch('https://script.google.com/macros/s/AKfycbzSFYyY6MD10vxK_jtYSNKwDAgBWYjGOoha8gpwZZBdAE48yGja4s0T87Ad39z6ULBL/exec?action=getFixtures')
-    .then(response => response.json())
+  fetch('https://script.google.com/macros/s/AKfycbx64fsoUnHN6bQv5_PmIqd8_BBAbS4mCdo08LTo6Og9fQnF_j5V5DKhFxhDDT8Vs61G/exec?action=getFixtures')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
     .then(data => {
-      console.log("Fixtures data fetched:", data); // Log fetched data for debugging
+      console.log("Fixtures data fetched:", data);
       const fixturesContainer = document.getElementById("fixtures-container");
 
-      if (data.length === 0) {
+      if (!data || data.length === 0) {
         fixturesContainer.innerHTML = "<p>No fixtures available for this week.</p>";
       } else {
         data.forEach(fixture => {
@@ -52,16 +57,16 @@ document.addEventListener("DOMContentLoaded", function() {
     console.log("Saving predictions for email:", email);
     console.log("Predictions:", predictions);
 
-    fetch('https://script.google.com/macros/s/AKfycbzSFYyY6MD10vxK_jtYSNKwDAgBWYjGOoha8gpwZZBdAE48yGja4s0T87Ad39z6ULBL/exec?action=savePredictions', {
+    fetch('https://script.google.com/macros/s/AKfycbx64fsoUnHN6bQv5_PmIqd8_BBAbS4mCdo08LTo6Og9fQnF_j5V5DKhFxhDDT8Vs61G/exec?action=savePredictions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ email: email, predictions: predictions }),
     })
-    .then(response => response.text())
+    .then(response => response.json())
     .then(result => {
-      alert(result);
+      alert(result.success || result.error);
     })
     .catch(error => {
       console.error("Error saving predictions:", error);

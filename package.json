@@ -1,0 +1,24 @@
+{
+  "name": "premier-league-score-guessing",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/louriach/Premier-League-Score-Guessing.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/louriach/Premier-League-Score-Guessing/issues"
+  },
+  "homepage": "https://github.com/louriach/Premier-League-Score-Guessing#readme",
+  "dependencies": {
+    "express": "^4.19.2",
+    "node-fetch": "^3.3.2"
+  }
+}
