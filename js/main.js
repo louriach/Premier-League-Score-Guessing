@@ -9,14 +9,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
   console.log("Email captured:", email);
 
-  // Fetch the fixtures from the Google Apps Script
   fetch('https://script.google.com/macros/s/AKfycbx64fsoUnHN6bQv5_PmIqd8_BBAbS4mCdo08LTo6Og9fQnF_j5V5DKhFxhDDT8Vs61G/exec?action=getFixtures')
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
       console.log("Fixtures data fetched:", data);
       const fixturesContainer = document.getElementById("fixtures-container");
@@ -41,7 +35,6 @@ document.addEventListener("DOMContentLoaded", function() {
       alert("Failed to load fixtures. Please try again later.");
     });
 
-  // Handle save predictions button click
   document.getElementById("save-predictions").addEventListener("click", function() {
     const predictions = {};
 
