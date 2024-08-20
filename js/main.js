@@ -1,5 +1,13 @@
 document.addEventListener("DOMContentLoaded", function() {
   const email = new URLSearchParams(window.location.search).get('email');
+  
+  if (!email) {
+    console.error("Error: No email provided in URL");
+    alert("Error: No email provided. Please make sure you accessed this page via the correct link in the email.");
+    return;
+  }
+  
+  console.log("Email captured:", email);
 
   // Fetch the fixtures from the Google Apps Script
   fetch('https://script.google.com/macros/s/AKfycbzSFYyY6MD10vxK_jtYSNKwDAgBWYjGOoha8gpwZZBdAE48yGja4s0T87Ad39z6ULBL/exec?action=getFixtures')
@@ -40,6 +48,9 @@ document.addEventListener("DOMContentLoaded", function() {
       predictions[`${fixtureId}_home`] = homeScore;
       predictions[`${fixtureId}_away`] = awayScore;
     });
+
+    console.log("Saving predictions for email:", email);
+    console.log("Predictions:", predictions);
 
     fetch('https://script.google.com/macros/s/AKfycbzSFYyY6MD10vxK_jtYSNKwDAgBWYjGOoha8gpwZZBdAE48yGja4s0T87Ad39z6ULBL/exec?action=savePredictions', {
       method: 'POST',
