@@ -1,68 +1,60 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Extract email from URL parameters
-    const urlParams = new URLSearchParams(window.location.search);
-    const email = urlParams.get('email');
-    if (!email) {
-      document.getElementById('userInfo').innerHTML = '<p class="text-red-500">Error: No email provided.</p>';
-      return;
-    }
-    
-    // Display user info
-    document.getElementById('userInfo').innerHTML = `<p class="text-lg">Welcome, ${email}! Please enter your predictions below:</p>`;
-  
-    // Fetch fixtures and render form
-    fetchFixtures(email);
-  });
-  
-  // Fetch fixtures from Google Apps Script web app
-  function fetchFixtures(email) {
-    fetch('https://script.google.com/macros/s/AKfycbzSFYyY6MD10vxK_jtYSNKwDAgBWYjGOoha8gpwZZBdAE48yGja4s0T87Ad39z6ULBL/exec?action=getFixtures') // Replace with your actual web app URL and endpoint
-      .then(response => response.json())
-      .then(data => {
-        const fixturesContainer = document.getElementById('fixturesContainer');
-        fixturesContainer.innerHTML = '';
-  
-        // Create input fields for each fixture
+document.addEventListener("DOMContentLoaded", function() {
+  const email = new URLSearchParams(window.location.search).get('email');
+
+  // Fetch the fixtures from the Google Apps Script
+  fetch('https://script.google.com/macros/s/AKfycbzSFYyY6MD10vxK_jtYSNKwDAgBWYjGOoha8gpwZZBdAE48yGja4s0T87Ad39z6ULBL/exec?action=getFixtures')
+    .then(response => response.json())
+    .then(data => {
+      console.log("Fixtures data fetched:", data); // Log fetched data for debugging
+      const fixturesContainer = document.getElementById("fixtures-container");
+
+      if (data.length === 0) {
+        fixturesContainer.innerHTML = "<p>No fixtures available for this week.</p>";
+      } else {
         data.forEach(fixture => {
-          const fixtureElement = document.createElement('div');
-          fixtureElement.className = 'mb-4';
+          const fixtureElement = document.createElement("div");
+          fixtureElement.classList.add("fixture");
           fixtureElement.innerHTML = `
-            <label class="block mb-2">${fixture.HomeTeam} vs ${fixture.AwayTeam}</label>
-            <input type="text" name="${fixture.id}_home" placeholder="${fixture.HomeTeam} score" class="border border-gray-300 p-2 rounded mr-2" required>
-            <input type="text" name="${fixture.id}_away" placeholder="${fixture.AwayTeam} score" class="border border-gray-300 p-2 rounded" required>
+            <p>${fixture.HomeTeam} vs ${fixture.AwayTeam} on ${new Date(fixture.Date).toDateString()}</p>
+            <input type="number" id="${fixture.ID}_home" placeholder="Home Score" class="score-input">
+            <input type="number" id="${fixture.ID}_away" placeholder="Away Score" class="score-input">
           `;
           fixturesContainer.appendChild(fixtureElement);
         });
-  
-        // Handle form submission
-        const form = document.getElementById('predictionForm');
-        form.addEventListener('submit', function(event) {
-          event.preventDefault();
-          savePredictions(email, new FormData(form));
-        });
-      })
-      .catch(error => console.error('Error fetching fixtures:', error));
-  }
-  
-  // Save predictions to Google Apps Script web app
-  function savePredictions(email, formData) {
-    const predictions = {};
-    formData.forEach((value, key) => {
-      predictions[key] = value;
+      }
+    })
+    .catch(error => {
+      console.error("Error fetching fixtures:", error);
+      alert("Failed to load fixtures. Please try again later.");
     });
-  
-    fetch('https://script.google.com/macros/s/AKfycbzSFYyY6MD10vxK_jtYSNKwDAgBWYjGOoha8gpwZZBdAE48yGja4s0T87Ad39z6ULBL/exec?action=savePredictions', { // Replace with your actual web app URL and endpoint
+
+  // Handle save predictions button click
+  document.getElementById("save-predictions").addEventListener("click", function() {
+    const predictions = {};
+
+    document.querySelectorAll(".fixture").forEach(fixtureElement => {
+      const homeScore = fixtureElement.querySelector("input[id*='_home']").value;
+      const awayScore = fixtureElement.querySelector("input[id*='_away']").value;
+      const fixtureId = fixtureElement.querySelector("input[id*='_home']").id.split('_')[0];
+
+      predictions[`${fixtureId}_home`] = homeScore;
+      predictions[`${fixtureId}_away`] = awayScore;
+    });
+
+    fetch('https://script.google.com/macros/s/AKfycbzSFYyY6MD10vxK_jtYSNKwDAgBWYjGOoha8gpwZZBdAE48yGja4s0T87Ad39z6ULBL/exec?action=savePredictions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email, predictions }),
+      body: JSON.stringify({ email: email, predictions: predictions }),
     })
-    .then(response => response.json())
+    .then(response => response.text())
     .then(result => {
-      alert('Your predictions have been saved!');
-      window.location.href = 'leaderboard.html'; // Redirect to the leaderboard or another page
+      alert(result);
     })
-    .catch(error => console.error('Error saving predictions:', error));
-  }
-  
+    .catch(error => {
+      console.error("Error saving predictions:", error);
+      alert("Failed to save predictions. Please try again later.");
+    });
+  });
+});
